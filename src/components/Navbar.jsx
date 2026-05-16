@@ -29,13 +29,13 @@ const Navbar = () => {
       </div>
       <ul className="flex gap-3">
         <li>
-          <Link href="/profile">Profile</Link>
+          <Link href={"/profile"}>Profile</Link>
         </li>
         <li>
-          <Link href="/login">Login</Link>
+          <Link href={"/login"}>Login</Link>
         </li>
         <li>
-          <Link href="/sign-up">Sign Up</Link>
+          <Link href={"/signup"}>Sign Up</Link>
         </li>
       </ul>
     </nav>
