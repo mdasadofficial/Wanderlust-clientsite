@@ -8,12 +8,14 @@ import {
   Form,
   Input,
   Label,
+  Separator,
   TextField,
 } from "@heroui/react";
 import React from "react";
 import { authClient } from "../api/auth/[...all]/auth-client";
 import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
+import { FcGoogle } from "react-icons/fc";
 
 const LoginPage = () => {
   const onSubmit = async (e) => {
@@ -23,10 +25,11 @@ const LoginPage = () => {
 
     const user = Object.fromEntries(formData.entries());
 
-    const { data, error } = await authClient.signin.email({
+    const { data, error } = await authClient.signIn.email({
       email: user.email,
       password: user.password,
     });
+    console.log({ data, error });
     if (data) {
       redirect("/");
     }
@@ -35,19 +38,23 @@ const LoginPage = () => {
       return;
     }
 
-    toast.success("Login successfully");
-
-    console.log({ data, error });
+    toast.success("Account created successfully");
   };
+
+  const handleGoogleSignin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+    });
+  };
+
   return (
     <div className="max-w-7xl mx-auto my-10">
       <div className="text-center">
-        <h1 className="text-2xl font-bold my-3">Login </h1>
+        <h1 className="text-2xl font-bold my-3">Login</h1>
+        <p className="p-3">Start your adventure with wanderlust!</p>
       </div>
       <Card className="border">
         <Form onSubmit={onSubmit} className="flex w-96 flex-col gap-4">
-         
-
           <TextField isRequired name="email" type="email">
             <Label>Email</Label>
             <Input placeholder="john@example.com" />
@@ -85,6 +92,23 @@ const LoginPage = () => {
             </Button>
           </div>
         </Form>
+        <div>
+          <div className="flex justify-center items-center gap-3 ">
+            <Separator />
+            <div className="whitespace-nowrap py-3">Or Sign up with </div>
+            <Separator />
+          </div>
+          <div>
+            <Button
+              onClick={handleGoogleSignin}
+              variant="outline"
+              className={"w-full items-center justify-center"}
+            >
+              {" "}
+              <FcGoogle /> Sign In With Google!
+            </Button>
+          </div>
+        </div>
       </Card>
     </div>
   );

@@ -8,12 +8,14 @@ import {
   Form,
   Input,
   Label,
+  Separator,
   TextField,
 } from "@heroui/react";
 import React from "react";
 import { authClient } from "../api/auth/[...all]/auth-client";
 import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
+import { FcGoogle } from "react-icons/fc";
 
 const SignupPage = () => {
   const onSubmit = async (e) => {
@@ -41,10 +43,18 @@ const SignupPage = () => {
 
     console.log({ data, error });
   };
+
+  const handleGoogleSignin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+    });
+  };
+
   return (
     <div className="max-w-7xl mx-auto my-10">
       <div className="text-center">
         <h1 className="text-2xl font-bold my-3">Create Account</h1>
+        <p className="p-3">Start your adventure with wanderlust!</p>
       </div>
       <Card className="border">
         <Form onSubmit={onSubmit} className="flex w-96 flex-col gap-4">
@@ -96,6 +106,23 @@ const SignupPage = () => {
             </Button>
           </div>
         </Form>
+        <div>
+          <div className="flex justify-center items-center gap-3 ">
+            <Separator />
+            <div className="whitespace-nowrap py-3">Or sign up with </div>
+            <Separator />
+          </div>
+          <div>
+            <Button
+              onClick={handleGoogleSignin}
+              variant="outline"
+              className={"w-full items-center justify-center"}
+            >
+              {" "}
+              <FcGoogle /> Sign Up With Google!
+            </Button>
+          </div>
+        </div>
       </Card>
     </div>
   );
