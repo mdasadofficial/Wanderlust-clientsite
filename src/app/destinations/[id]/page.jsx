@@ -1,16 +1,29 @@
 import BookingCard from "@/components/BookingCard";
 import { DeleteAlert } from "@/components/DeleteAlert";
 import { EditModal } from "@/components/EditModal";
-import { Button } from "@heroui/react";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Image from "next/image";
 import React from "react";
-import { BiEdit, BiSolidCalendarHeart } from "react-icons/bi";
+import { BiSolidCalendarHeart } from "react-icons/bi";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 const DestinationDetailsPage = async ({ params }) => {
   const { id } = await params;
+  const user = await auth.api.getSession({
+    headers: await headers(),
+  });
+console.log(user?.session?.token);
 
-  const res = await fetch(`http://localhost:5000/destination/${id}`);
+
+  const token = user?.session?.token;
+  // console.log(finalToken);
+
+  const res = await fetch(`http://localhost:5000/destination/${id}`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
   const destination = await res.json();
   const {
     _id,
@@ -35,30 +48,29 @@ const DestinationDetailsPage = async ({ params }) => {
         width={800}
         alt={destinationName}
       />
-     <div className="flex justify-between py-5">
-       <div className="p-2">
-        <div className="flex items-center gap-2">
-          <FaMapMarkerAlt />
-          <span>{country}</span>
-        </div>
-        <div className="flex justify-between">
-          <div>
+      <div className="flex justify-between py-5">
+        <div className="p-2">
+          <div className="flex items-center gap-2">
+            <FaMapMarkerAlt />
+            <span>{country}</span>
+          </div>
+          <div className="flex justify-between">
             <div>
-              <h2 className="text-xl font-bold ">{destinationName}</h2>
-            </div>
-            <div className="flex gap-1 items-center">
-              {" "}
-              <BiSolidCalendarHeart /> {duration}
+              <div>
+                <h2 className="text-xl font-bold ">{destinationName}</h2>
+              </div>
+              <div className="flex gap-1 items-center">
+                {" "}
+                <BiSolidCalendarHeart /> {duration}
+              </div>
             </div>
           </div>
-          
+          <h1 className="mt-10 text-2xl font-bold">Overview</h1>
+          <p>{description}</p>
         </div>
-        <h1 className="mt-10 text-2xl font-bold">Overview</h1>
-        <p>{description}</p>
-      </div>
 
-      <BookingCard  destination={destination}/>
-     </div>
+        <BookingCard destination={destination} />
+      </div>
     </div>
   );
 };

@@ -12,7 +12,7 @@ import {
   TextField,
 } from "@heroui/react";
 import React from "react";
-import { authClient } from "../api/auth/[...all]/auth-client";
+import { authClient } from "../../lib/auth-client";
 import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";

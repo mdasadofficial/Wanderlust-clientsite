@@ -1,6 +1,7 @@
 "use client";
 
-import { authClient } from "@/app/api/auth/[...all]/auth-client";
+
+import { authClient } from "@/lib/auth-client";
 import { Button, Card, DateField, Label } from "@heroui/react";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
