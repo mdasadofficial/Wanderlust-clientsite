@@ -10,21 +10,25 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 
 const DestinationDetailsPage = async ({ params }) => {
   const { id } = await params;
-  const user = await auth.api.getSession({
+  const session = await auth.api.getSession({
     headers: await headers(),
   });
-console.log(user?.session?.token);
+  const user = session?.user
+  console.log(user?.session?.token);
 
-
-  const token = user?.session?.token;
-  // console.log(finalToken);
+  const {token} = await auth.api.getToken({
+    headers: await headers()
+  })
+  
 
   const res = await fetch(`http://localhost:5000/destination/${id}`, {
     headers: {
       authorization: `Bearer ${token}`,
     },
   });
-  const destination = await res.json();
+  const destination = await res?.json();
+console.log("Database unique data:", destination);
+
   const {
     _id,
     imageUrl,
@@ -34,7 +38,7 @@ console.log(user?.session?.token);
     country,
     description,
   } = destination;
-  console.log(destination);
+  // console.log(destination);
   return (
     <div className="max-w-7xl mx-auto py-10">
       <div className=" items-center flex justify-end gap-2 p-2">
@@ -43,7 +47,7 @@ console.log(user?.session?.token);
       </div>
       <Image
         className="w-full h-100 object-cover"
-        src={imageUrl}
+        src={imageUrl  }
         height={500}
         width={800}
         alt={destinationName}

@@ -10,18 +10,25 @@ const MyBookingPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(), // you need to pass the headers object.
   });
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
 
   const user = session?.user;
   console.log(user);
 
-  const res = await fetch(`http://localhost:5000/booking/${user?.id}`);
+  const res = await fetch(`http://localhost:5000/booking/${user?.id}`, {
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  });
 
   const bookings = await res.json();
   console.log(bookings);
   return (
     <div className="max-w-7xl mx-auto p-5">
       <h1 className="text-3xl font-bold">My Bookings</h1>
-      <Card >
+      <Card>
         {bookings.map((booking) => (
           <div
             key={booking._id}
@@ -35,7 +42,10 @@ const MyBookingPage = async () => {
               height={200}
             />
             <div>
-              <h1 className="font-bold text-2xl"> {booking.destinationName} </h1>
+              <h1 className="font-bold text-2xl">
+                {" "}
+                {booking.destinationName}{" "}
+              </h1>
               <p className="text-sm text-muted">
                 Departure Date:{" "}
                 {new Date(booking.departureDate).toLocaleDateString()}
